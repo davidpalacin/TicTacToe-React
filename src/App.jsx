@@ -8,9 +8,11 @@ const TURNS = {
 
 const Square = ({ children, updateBoard, index, isSelected }) => {
   const className = `cell ${ isSelected ? 'is-selected' : '' }`;
+
   const handleClick = () => {
     updateBoard()
   }
+  
   return (
     <div onClick={handleClick} className={className}>
       {children}
