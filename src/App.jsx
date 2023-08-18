@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import confetti from 'canvas-confetti'
 import { Square } from './components/Square.jsx'
-import { TURNS } from './constants'
+import { PLAYERS } from './constants'
 import { WinnerModal } from './components/WinnerModal'
 import { checkWin } from './logic/board'
 import { resetGameLocalStorage, saveGameLocalStorage } from './logic/storage'
@@ -12,38 +12,38 @@ function App() {
     const boardFromLocalStorage = localStorage.getItem('board')
     return boardFromLocalStorage ? JSON.parse(boardFromLocalStorage) : Array(9).fill(null)
   })
-  const [turn, setTurn] = useState(()=> {
+  const [turn, setTurn] = useState(() => {
     const turnFromLocalStorage = localStorage.getItem('turn')
-    return turnFromLocalStorage ?? TURNS.X
+    return turnFromLocalStorage ?? PLAYERS.X
   })
   const [winner, setWinner] = useState(null)
 
   const updateBoard = (index) => {
     // No se actualiza la celda si ya tiene una ficha
-    if(board[index] || winner) return 
+    if (board[index] || winner) return
     // Actualizar en tablero
     const newBoard = [...board]
     newBoard[index] = turn
     setBoard(newBoard)
     // Cambiar el turno
-    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
+    const newTurn = turn === PLAYERS.X ? PLAYERS.O : PLAYERS.X
     setTurn(newTurn)
     // Guardar aquí partida
-    saveGameLocalStorage({board: newBoard, turn: newTurn})
+    saveGameLocalStorage({ board: newBoard, turn: newTurn })
     // Revisar si hay un ganador
     const newWinner = checkWin(newBoard)
     // Comprobamos si hay un ganador o si ha habido un empate
-    if(newWinner) {
+    if (newWinner) {
       confetti()
       setWinner(newWinner)
     } else if (!newBoard.includes(null)) { // si no hay null en ninguna casilla es porque hay X u O en todas.
       setWinner(false)
-    }   
+    }
   }
 
-  const handlePlayAgain = ()  => {
+  const handlePlayAgain = () => {
     setBoard(Array(9).fill(null))
-    setTurn(TURNS.X)
+    setTurn(PLAYERS.X)
     setWinner(null)
     resetGameLocalStorage()
   }
@@ -69,11 +69,11 @@ function App() {
       </section>
 
       <section className='turn'>
-        <Square isSelected={turn === TURNS.X}>{TURNS.X}</Square>
-        <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
+        <div className={`turn-avatar ${turn === PLAYERS.X ? 'is-selected' : ''}`}>{PLAYERS.X}</div>
+        <div className={`turn-avatar ${turn === PLAYERS.O ? 'is-selected' : ''}`}>{PLAYERS.O}</div>
       </section>
 
-      <WinnerModal winner={winner} handlePlayAgain={handlePlayAgain}  />
+      <WinnerModal winner={winner} handlePlayAgain={handlePlayAgain} />
     </main>
   )
 }

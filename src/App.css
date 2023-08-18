@@ -28,8 +28,17 @@ main {
 
 .turn {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
   margin-top: 35px;
+}
+
+.turn-avatar {
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 4px;
+  font-size: 2rem;
 }
 
 .is-selected{
