@@ -1,40 +1,49 @@
 import { useState } from 'react'
 import './App.css'
-
-const TURNS = {
-  X: 'X',
-  O: 'O'
-}
-
-const Square = ({ children, updateBoard, index, isSelected }) => {
-  const className = `cell ${ isSelected ? 'is-selected' : '' }`;
-
-  const handleClick = () => {
-    updateBoard(index)
-  }
-  
-  return (
-    <div onClick={handleClick} className={className}>
-      {children}
-    </div>
-  )
-}
+import confetti from 'canvas-confetti'
+import { Square } from './components/Square.jsx'
+import { TURNS } from './constants'
+import { WinnerModal } from './components/WinnerModal'
+import { checkWin } from './logic/board'
 
 function App() {
   const [board, setBoard] = useState(Array(9).fill(null))
   const [turn, setTurn] = useState(TURNS.X)
+  const [winner, setWinner] = useState(null)
 
   const updateBoard = (index) => {
+    // No se actualiza la celda si ya tiene una ficha
+    if(board[index] || winner) return 
+    // Actualizar en tablero
     const newBoard = [...board]
     newBoard[index] = turn
     setBoard(newBoard)
-    turn === TURNS.X ? setTurn(TURNS.O) : setTurn(TURNS.X)
+    // Cambiar el turno
+    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
+    setTurn(newTurn)
+    // Revisar si hay un ganador
+    const newWinner = checkWin(newBoard)
+    // Comprobamos si hay un ganador o si ha habido un empate
+    if(newWinner) {
+      confetti()
+      setWinner(newWinner)
+    } else if (!newBoard.includes(null)) { // si no hay null en ninguna casilla es porque hay X u O en todas.
+      setWinner(false)
+    }   
+  }
+
+  const handlePlayAgain = ()  => {
+    setBoard(Array(9).fill(null))
+    setTurn(TURNS.X)
+    setWinner(null)
   }
 
   return (
     <main>
-      <h3>Tic Tac Toe</h3>
+      <h1>Tic Tac Toe</h1>
+      <button className='btnResetGame' onClick={handlePlayAgain}>Resetear</button>
       <section className="board">
+
         {
           board.map((_, index) => {
             return (
@@ -55,6 +64,7 @@ function App() {
         <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
       </section>
 
+      <WinnerModal winner={winner} handlePlayAgain={handlePlayAgain}  />
     </main>
   )
 }
