@@ -30,7 +30,6 @@ function App() {
     setTurn(newTurn)
     // Guardar aquí partida
     saveGameLocalStorage({board: newBoard, turn: newTurn})
-
     // Revisar si hay un ganador
     const newWinner = checkWin(newBoard)
     // Comprobamos si hay un ganador o si ha habido un empate
@@ -54,7 +53,6 @@ function App() {
       <h1>Tic Tac Toe</h1>
       <button className='btnResetGame' onClick={handlePlayAgain}>Resetear</button>
       <section className="board">
-
         {
           board.map((_, index) => {
             return (
