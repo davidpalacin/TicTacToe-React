@@ -10,7 +10,6 @@ export function WinnerModal({winner, handlePlayAgain}) {
               <h2>
                 {winnerText}
               </h2>
-
               {
                 winner === false
                 ? ''
@@ -21,8 +20,6 @@ export function WinnerModal({winner, handlePlayAgain}) {
 
                 )
               }
-              
-
               <footer>
                 <button onClick={handlePlayAgain} className='btnPlayAgain'>Empezar de nuevo</button>
               </footer>
